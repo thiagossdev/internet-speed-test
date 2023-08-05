@@ -1,0 +1,81 @@
+x-app: &app
+  build:
+    context: .
+    args:
+      RUBY_VERSION: '3.2.2'
+      MARIADB_VERSION: '11.0'
+      NODE_MAJOR: '18'
+  image: internet-speed-test-dev:1.0.0
+  environment: &env
+    NODE_ENV: ${NODE_ENV:-development}
+    RAILS_ENV: ${RAILS_ENV:-development}
+  tmpfs:
+    - /tmp
+    - /app/tmp/pids
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - ..:/app:cached
+    - bundle:/usr/local/bundle
+    - rails_cache:/app/tmp/cache
+    - assets:/app/public/assets
+    - node_modules:/app/node_modules
+    - history:/usr/local/hist
+    - ./.my.cnf:/root/.my.cnf:ro
+    - ./.bashrc:/root/.bashrc:ro
+  environment: &backend_environment
+    <<: *env
+    DATABASE_URL: mysql2://mariadb:mariadb@mariadb:3306
+    MALLOC_ARENA_MAX: 2
+    WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
+    BOOTSNAP_CACHE_DIR: /usr/local/bundle/_bootsnap
+    XDG_DATA_HOME: /app/tmp/cache
+    YARN_CACHE_FOLDER: /app/node_modules/.yarn-cache
+    HISTFILE: /usr/local/hist/.bash_history
+    MYSQL_HISTFILE: /usr/local/hist/.mariadb_history
+    IRB_HISTFILE: /usr/local/hist/.irb_history
+    EDITOR: vi
+  depends_on:
+    mariadb:
+      condition: service_healthy
+
+services:
+  rails:
+    <<: *backend
+    command: bundle exec rails
+
+  web:
+    <<: *backend
+    command: bundle exec rails server -b 0.0.0.0
+    ports:
+      - '3000:3000'
+
+  mariadb:
+    image: mariadb:11
+    volumes:
+      - ./.my.cnf:/root/.my.cnf:ro
+      - mariadb:/var/lib/mysql
+      - history:/user/local/hist
+    environment:
+      MYSQL_HISTFILE: /usr/local/hist/.mariadb_history
+      MARIADB_DATABASE: internet_speed_test_development
+      MARIADB_USER: mariadb
+      MARIADB_PASSWORD: mariadb
+      MARIADB_RANDOM_ROOT_PASSWORD: true
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: ['CMD', 'healthcheck.sh', '--su=mysql', '--connect', '--innodb_initialized']
+      interval: 5s
+
+volumes:
+  bundle:
+  node_modules:
+  history:
+  rails_cache:
+  mariadb:
+  assets:
+
