@@ -10,5 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_09_003259) do
+  create_table "places", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.binary "external_id", limit: 16, null: false
+    t.string "city", null: false
+    t.string "name", null: false
+    t.string "address", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city", "name"], name: "index_places_on_city_and_name"
+    t.index ["external_id"], name: "index_places_on_external_id", unique: true
+  end
+
 end
