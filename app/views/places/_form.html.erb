@@ -1,4 +1,4 @@
-<%= form_with(model: place, url: place_path(place.external_id)) do |form| %>
+<%= form_with(model: place, url: external_id ? place_path(external_id) : places_path) do |form| %>
   <% if place.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(place.errors.count, "error") %> prohibited this place from being saved:</h2>
