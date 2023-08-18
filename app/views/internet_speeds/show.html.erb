@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @internet_speed %>
+
+<div>
+  <%= link_to "Edit this internet speed", edit_internet_speed_path(@internet_speed) %> |
+  <%= link_to "Back to internet speeds", internet_speeds_path %>
+
+  <%= button_to "Destroy this internet speed", @internet_speed, method: :delete %>
+</div>

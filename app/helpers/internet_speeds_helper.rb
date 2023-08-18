@@ -1,0 +1,2 @@
+module InternetSpeedsHelper
+end

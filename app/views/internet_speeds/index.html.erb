@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Internet speeds</h1>
+
+<div id="internet_speeds">
+  <% @internet_speeds.each do |internet_speed| %>
+    <%= render internet_speed %>
+    <p>
+      <%= link_to "Show this internet speed", internet_speed %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New internet speed", new_internet_speed_path %>
