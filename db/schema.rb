@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_09_003259) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_18_003735) do
+  create_table "internet_speeds", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "place_id", null: false
+    t.decimal "download_speed", precision: 15, scale: 2, null: false
+    t.string "download_units", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["place_id"], name: "index_internet_speeds_on_place_id"
+  end
+
   create_table "places", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.binary "external_id", limit: 16, null: false
     t.string "city", null: false
@@ -22,4 +31,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_003259) do
     t.index ["external_id"], name: "index_places_on_external_id", unique: true
   end
 
+  add_foreign_key "internet_speeds", "places"
 end

@@ -1,0 +1,32 @@
+<%= form_with(model: internet_speed) do |form| %>
+  <% if internet_speed.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(internet_speed.errors.count, "error") %> prohibited this internet_speed from being saved:</h2>
+
+      <ul>
+        <% internet_speed.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :place_id, style: "display: block" %>
+    <%= form.text_field :place_id %>
+  </div>
+
+  <div>
+    <%= form.label :download_speed, style: "display: block" %>
+    <%= form.text_field :download_speed %>
+  </div>
+
+  <div>
+    <%= form.label :download_units, style: "display: block" %>
+    <%= form.text_field :download_units %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
