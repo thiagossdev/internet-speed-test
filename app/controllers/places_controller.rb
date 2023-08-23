@@ -67,4 +67,17 @@ class PlacesController < ApplicationController
     def place_params
       params.require(:place).permit(:city, :name, :address)
     end
+
+  def most_recent_download_speed(place)
+    # Assume that all the units are the same
+    place.internet_speeds.order('created_at').last&.download_speed || 0
+  end
+
+  def most_recent_download_units(place)
+    place.internet_speeds.order('created_at').last&.download_units || nil
+  end
+
+  def number_of_measurements(place)
+    place.internet_speeds.count
+  end
 end
